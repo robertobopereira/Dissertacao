@@ -1,0 +1,333 @@
+{UTF-8}
+Saida Nivel 2=
+	IF THEN ELSE(Precipitação>(9999-Fase 2), 0 , Evaporação Fase2 + IF THEN ELSE(Evaporação Fase2\
+		>0,Transpiração, 0 ) )
+	~	
+	~		|
+
+Saida Nivel 1=
+	IF THEN ELSE( ( Evaporação Fase1+(IF THEN ELSE(Evaporação Fase1>0, IF THEN ELSE(\
+		Evaporação Fase2>0, 0 , Transpiração
+  ), 0 ) ) >Fase 1 ), Fase 1, Evaporação Fase1+(IF THEN ELSE(Evaporação Fase1>0, \
+		IF THEN ELSE(Evaporação Fase2>0, 
+0 , Transpiração  ), 0 ) ) )
+	~	
+	~		|
+
+Evapotranspiração Ritchie=
+	Evaporação Fase1+Evaporação Fase2+Transpiração
+	~	
+	~		|
+
+Transpiração=
+	IF THEN ELSE( IAF >= 0.1 , IF THEN ELSE(  IAF > 3, ETmax - ( Evaporação Fase1 + Evaporação Fase2\
+		) , IF THEN ELSE( (
+ETmax*(1-EXP(-IAF))) > ( ETmax - ( Evaporação Fase1 + Evaporação Fase2) ) , ETmax\
+		 - ( Evaporação Fase1 + Evaporação Fase2
+) , ETmax*(1-EXP(-IAF)) ) ) , 0 )
+	~	
+	~		|
+
+Evapotranspiração Bowen:=
+	GET XLS DATA( 'dados.xls','dados', 'A','H2' )
+	~	
+	~		|
+
+Tempo= INTEG (
+	Tempo de Transição,
+		0)
+	~	
+	~	IF THEN ELSE(Tempo de Transição>0, Tempo de Transição-Tempo , IF THEN \
+		ELSE( Evaporação Fase2>0, ((9999-Fase 2)+Evaporação \
+		Fase2-Precipitação)  , 0 ) )
+	|
+
+Entrada Nivel 2=
+	IF THEN ELSE(Precipitação>0, IF THEN ELSE(Precipitação>(9999-Fase 2), (9999-Fase 2\
+		), Precipitação) , 0)
+	~	
+	~		|
+
+aux=
+	IF THEN ELSE( IAF<1,  ETmax*(1-0.43*IAF) , (ETmax/1.1)*EXP(-0.4*IAF) )
+	~	
+	~		|
+
+Evaporação Fase1=
+	IF THEN ELSE( (U - Fase 1)<U, IF THEN ELSE( (IF THEN ELSE( Precipitação>(U-Fase 1)\
+		 , aux , (U-Fase 1)+aux )>U  ) , aux-0.4*(((U-Fase 1)+aux )-U) , aux) , 0)
+	~	
+	~	IF THEN ELSE( ((U - Fase 1)+aux)>U , aux - 0.4 * ( ((U - Fase 1)+aux) - U)
+	|
+
+Evaporação Fase2=
+	IF THEN ELSE( (U - Fase 1)<U, 0 , IF THEN ELSE( Precipitação > 0, IF THEN ELSE( IF THEN ELSE\
+		( (Alfa*((Tempo+1)^(-0.5))) <= ( 0.8* Precipitação), (Alfa*((Tempo+1)^(-0.5)))+ Precipitação\
+		,(Alfa*((Tempo+1)^(-0.5))) )>ETmax , ETmax , IF THEN ELSE( (Alfa*((Tempo+1)^(-0.5))\
+		) <= ( 0.8* Precipitação), (Alfa*((Tempo+1)^(-0.5)))+ Precipitação,(Alfa*((Tempo\
+		+1)^(-0.5))) ) ) , IF THEN ELSE( (Alfa*((Tempo+1)^(-0.5))) > ETmax, ETmax , (Alfa*(\
+		(Tempo+1)^(-0.5))) ) ) )
+	~	
+	~	e2 = Alfa * ( Tempo +1 ) 
+		E2x = 0.8* Precipitação
+		
+		IF THEN ELSE( (U - Fase 1)<U, 0 ,  IF THEN ELSE( Precipitação > 0, IF THEN ELSE( \
+		(0.8* Precipitação)>ETmax , ETmax , IF THEN ELSE( ( Alfa * ( Tempo +1 ) \
+		) <= ( 0.8* Precipitação), ( Alfa * ( Tempo +1 ) )+ Precipitação ,  \
+		Alfa * ( Tempo +1 ) )  ) , IF THEN ELSE( (Alfa * ( Tempo +1 ) ) > ETmax, \
+		ETmax , Alfa * (  Tempo +1 )  ) ) )
+		
+		IF THEN ELSE( (U - Fase 1)<U, 0 ,  IF THEN ELSE( Precipitação > 0, IF \
+		THEN ELSE( (0.8* Precipitação)>ETmax , ETmax , IF THEN ELSE( \
+		(Alfa*((Tempo+1)^(-0.5))) <= ( 0.8* Precipitação), \
+		(Alfa*((Tempo+1)^(-0.5)))+ Precipitação ,  (Alfa*((Tempo+1)^(-0.5))) )  \
+		) , IF THEN ELSE( (Alfa*((Tempo+1)^(-0.5))) > ETmax, ETmax , \
+		(Alfa*((Tempo+1)^(-0.5))) ) ) )
+	|
+
+Entrada Nivel 1=
+	IF THEN ELSE(Precipitação>0, IF THEN ELSE(Precipitação>(9999-Fase 2), Precipitação\
+		-(9999-Fase 2) , 0 ) , 0)
+	~	
+	~	IF THEN ELSE(Precipitação>0, IF THEN ELSE(Precipitação>(9999-Fase 2), IF THEN \
+		ELSE( (Precipitação-(9999-Fase 2))<(U-Fase 1) , \
+		Precipitação-(9999-Fase 2) , (U-Fase 1) ), 0 ) , 0)
+		
+		IF THEN ELSE(Precipitação>0, IF THEN ELSE(Precipitação>(9999-Fase 2), \
+		Precipitação-(9999-Fase 2) , 0 ) , 0)
+	|
+
+Tempo de Transição=
+	IF THEN ELSE( Evaporação Fase1>0, IF THEN ELSE( (IF THEN ELSE( Precipitação>(U-Fase 1\
+		) , aux , (U-Fase 1)+aux )>U  ) , ((0.6*(((U-Fase 1)+aux)-U))/Alfa)^2 , -Tempo) , IF THEN ELSE\
+		(Precipitação>(9999-Fase 2), 0 ,  (  ( (9999-Fase 2)+Evaporação Fase2-Precipitação\
+		)/Alfa)^2 ) )
+	~	
+	~	Alfa*(0.6*(((U-Fase 1)+aux )-U)
+		(9999-Fase 2)+Evaporação Fase2-Precipitação )
+		
+		IF THEN ELSE( Evaporação Fase1>0, IF THEN ELSE( (IF THEN ELSE( \
+		Precipitação>(U-Fase 1) , aux , (U-Fase 1)+aux )>U  ) , ((0.6*(((U-Fase \
+		1)+aux)-U))/Alfa)^2 , -Tempo) , IF THEN ELSE(Precipitação>(9999-Fase 2), \
+		0 ,  ( ( (9999-Fase 2)+Evaporação Fase2-Precipitação)/Alfa)^2 ) )
+		
+		IF THEN ELSE( Evaporação Fase1>0, IF THEN ELSE( (IF THEN ELSE( \
+		Precipitação>(U-Fase 1) , aux , (U-Fase 1)+aux )>U  ) ,  ((0.6*(((U-Fase \
+		1)+aux)-U))/Alfa)^2, -Tempo) ,0 )
+	|
+
+Fase 2= INTEG (
+	Entrada Nivel 2-Saida Nivel 2,
+		9999)
+	~	
+	~		|
+
+Ar= INTEG (
+	Saida Nivel 1+Saida Nivel 2,
+		0)
+	~	
+	~		|
+
+Precipitação:=
+	GET XLS DATA( 'dados.xls','dados', 'A','F2' )
+	~	
+	~		|
+
+Fase 1= INTEG (
+	Entrada Nivel 1-Saida Nivel 1,
+		U)
+	~	
+	~		|
+
+U=
+	GET XLS CONSTANTS( 'constantes.xls','constantes', 'B4' )
+	~	
+	~		|
+
+Alfa=
+	GET XLS CONSTANTS( 'constantes.xls','constantes', 'B5' )
+	~	
+	~		|
+
+Alfa da Cultura=
+	GET XLS CONSTANTS( 'constantes.xls','constantes', 'B2' )
+	~	
+	~		|
+
+Alfa do Solo=
+	GET XLS CONSTANTS( 'constantes.xls','constantes', 'B3' )
+	~	
+	~		|
+
+ETmax=
+	(Radiação Solar*(0.00488-(0.00437*(Alfa da Cultura-(Alfa da Cultura-Alfa do Solo)*\
+		EXP(-0.75*IAF))))*((0.6*"Temp. Maxima")+(0.4*"Temp. Minima")+29))*IF THEN ELSE(( ( \
+		5 < "Temp. Maxima" ) :AND: ( "Temp. Maxima" <= 35) ), 1.1 , ( IF THEN ELSE( "Temp. Maxima"\
+		>35, 1.1 + 0.05*("Temp. Maxima"-35) , 0.01*EXP(0.18*("Temp. Maxima"+20))  ) ) )
+	~	
+	~		|
+
+IAF:=
+	GET XLS DATA( 'dados.xls','dados', 'A','G2' )
+	~	
+	~		|
+
+Radiação Solar:=
+	GET XLS DATA( 'dados.xls','dados', 'A','E2' )
+	~	
+	~		|
+
+"Temp. Maxima":=
+	GET XLS DATA( 'dados.xls','dados', 'A','C2' )
+	~	
+	~		|
+
+"Temp. Minima":=
+	GET XLS DATA( 'dados.xls','dados', 'A','D2' )
+	~	
+	~		|
+
+********************************************************
+	.Control
+********************************************************~
+		Simulation Control Parameters
+	|
+
+FINAL TIME  = 365
+	~	Day
+	~	The final time for the simulation.
+	|
+
+INITIAL TIME  = 26
+	~	Day
+	~	The initial time for the simulation.
+	|
+
+SAVEPER  = 
+        TIME STEP
+	~	Day [0,?]
+	~	The frequency with which output is stored.
+	|
+
+TIME STEP  = 1
+	~	Day [0,?]
+	~	The time step for the simulation.
+	|
+
+\\\---/// Sketch information - do not modify anything except names
+V300  Do not put anything below this section - it will be ignored
+*View 1
+$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,110,0
+10,1,Fase 1,404,558,40,20,3,3,0,0,0,0,0,0
+10,2,Fase 2,400,665,40,20,3,3,0,0,0,0,0,0
+12,3,48,91,559,10,8,0,3,0,0,-1,0,0,0
+1,4,6,1,4,0,0,22,0,0,0,-1--1--1,,1|(300,560)|
+1,5,6,3,100,0,0,22,0,0,0,-1--1--1,,1|(162,560)|
+11,6,48,230,560,6,8,34,3,0,0,1,0,0,0
+10,7,Entrada Nivel 1,230,579,50,11,40,3,0,0,-1,0,0,0
+12,8,48,86,668,10,8,0,3,0,0,-1,0,0,0
+1,9,11,2,4,0,0,22,0,0,0,-1--1--1,,1|(299,663)|
+1,10,11,8,100,0,0,22,0,0,0,-1--1--1,,1|(161,663)|
+11,11,48,232,663,6,8,34,3,0,0,1,0,0,0
+10,12,Entrada Nivel 2,232,682,50,11,40,3,0,0,-1,0,0,0
+10,13,Evaporação Fase1,383,357,54,54,2,131,0,0,0,0,0,0
+10,14,Evaporação Fase2,798,356,54,54,2,131,0,0,0,0,0,0
+10,15,Ar,684,572,40,20,3,3,0,0,0,0,0,0
+1,16,18,15,4,0,0,22,0,0,0,-1--1--1,,1|(684,667)|
+1,17,18,2,100,0,0,22,0,0,0,-1--1--1,,1|(491,667)|
+11,18,508,549,667,6,8,34,3,0,0,1,0,0,0
+10,19,Saida Nivel 2,549,686,43,11,40,3,0,0,-1,0,0,0
+1,20,22,15,4,0,0,22,0,0,0,-1--1--1,,1|(601,565)|
+1,21,22,1,100,0,0,22,0,0,0,-1--1--1,,1|(495,565)|
+11,22,172,552,565,6,8,34,3,0,0,1,0,0,0
+10,23,Saida Nivel 1,552,584,43,11,40,3,0,0,-1,0,0,0
+10,24,ETmax,528,210,36,36,2,131,0,0,0,0,0,0
+10,25,Transpiração,644,452,47,47,2,131,0,0,0,0,0,0
+10,26,Radiação Solar,322,112,49,11,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|12||64-160-98
+10,27,Alfa da Cultura,410,74,48,11,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|12||64-160-98
+10,28,Alfa do Solo,515,67,41,11,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|12||64-160-98
+10,29,"Temp. Minima",618,79,46,11,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|12||64-160-98
+10,30,"Temp. Maxima",648,149,48,11,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|12||64-160-98
+10,31,Alfa,701,213,15,11,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|12||64-160-98
+1,32,26,24,1,0,0,0,0,64,0,-1--1--1,,1|(416,138)|
+1,33,27,24,1,0,0,0,0,64,0,-1--1--1,,1|(463,120)|
+1,34,28,24,0,0,0,0,0,64,0,-1--1--1,,1|(519,119)|
+1,35,29,24,1,0,0,0,0,64,0,-1--1--1,,1|(574,129)|
+1,36,30,24,1,0,0,0,0,64,0,-1--1--1,,1|(594,166)|
+10,37,IAF,260,168,15,11,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|12||64-160-98
+1,38,37,24,1,0,0,0,0,64,0,-1--1--1,,1|(372,166)|
+10,39,TIME STEP,344,499,50,11,8,2,1,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128
+10,40,Time,323,488,26,11,8,2,1,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128
+10,41,U,579,238,8,11,8,3,0,2,-1,0,0,0,0-0-0,0-0-0,|12||64-160-98
+1,42,41,1,0,0,0,0,0,64,1,-1--1--1,,1|(496,387)|
+1,43,1,13,1,0,0,0,0,64,0,-1--1--1,,1|(363,470)|
+10,44,Precipitação,81,369,40,11,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|12||64-160-98
+1,45,41,13,1,0,0,0,0,64,0,-1--1--1,,1|(482,280)|
+10,46,Tempo de Transição,556,331,43,43,2,131,0,0,0,0,0,0
+1,47,13,22,1,0,0,0,0,64,0,-1--1--1,,1|(509,443)|
+1,48,44,6,1,0,0,0,0,64,0,-1--1--1,,1|(123,473)|
+1,49,44,11,1,0,0,0,0,64,0,-1--1--1,,1|(85,472)|
+1,50,2,6,1,0,0,0,0,64,0,-1--1--1,,1|(329,582)|
+1,51,2,11,1,0,0,0,0,64,0,-1--1--1,,1|(303,623)|
+10,52,aux,369,249,20,20,2,3,0,0,0,0,0,0
+1,53,24,52,1,0,0,0,0,64,0,-1--1--1,,1|(428,214)|
+1,54,37,52,1,0,0,0,0,64,0,-1--1--1,,1|(347,227)|
+10,55,Tempo,665,323,29,11,3,131,0,0,0,0,0,0
+1,56,46,55,1,0,0,0,0,64,0,-1--1--1,,1|(622,280)|
+1,57,31,14,1,0,0,0,0,64,0,-1--1--1,,1|(757,253)|
+1,58,1,14,1,0,0,0,0,64,0,-1--1--1,,1|(566,427)|
+1,59,55,14,1,0,0,0,0,64,0,-1--1--1,,1|(710,303)|
+1,60,41,14,1,0,0,0,0,64,0,-1--1--1,,1|(652,244)|
+1,61,24,14,1,0,0,0,0,64,0,-1--1--1,,1|(657,224)|
+1,62,14,18,1,0,0,0,0,64,0,-1--1--1,,1|(788,611)|
+1,63,13,25,1,0,0,0,0,64,0,-1--1--1,,1|(491,425)|
+1,64,14,25,1,0,0,0,0,64,0,-1--1--1,,1|(711,428)|
+10,65,Precipitação,868,572,49,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128
+1,66,65,14,1,0,0,0,0,64,0,-1--1--1,,1|(872,453)|
+1,67,24,25,1,0,0,0,0,64,0,-1--1--1,,1|(711,261)|
+1,68,37,25,1,0,0,0,0,64,0,-1--1--1,,1|(322,378)|
+10,69,U,197,475,17,11,8,2,1,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128
+1,70,13,46,0,0,0,0,0,64,0,-1--1--1,,1|(467,344)|
+1,71,44,13,1,0,0,0,0,64,0,-1--1--1,,1|(217,325)|
+1,72,52,13,1,0,0,0,0,64,0,-1--1--1,,1|(343,279)|
+1,73,31,46,1,0,0,0,0,64,0,-1--1--1,,1|(627,250)|
+1,74,52,46,1,0,0,0,0,64,0,-1--1--1,,1|(457,264)|
+1,75,1,46,0,0,0,0,0,64,0,-1--1--1,,1|(470,457)|
+1,76,44,46,1,0,0,0,0,64,0,-1--1--1,,1|(279,286)|
+1,77,41,46,0,0,0,0,0,64,0,-1--1--1,,1|(573,262)|
+1,78,55,46,1,0,0,0,0,64,0,-1--1--1,,1|(612,308)|
+10,79,Evapotranspiração Ritchie,1026,454,60,24,3,131,0,0,0,0,0,0
+1,80,13,79,1,0,0,0,0,64,0,-1--1--1,,1|(694,403)|
+1,81,14,79,1,0,0,0,0,64,0,-1--1--1,,1|(923,354)|
+1,82,25,79,1,0,0,0,0,64,0,-1--1--1,,1|(832,491)|
+1,83,25,22,1,0,0,0,2,64,0,-1--1--1,|12||0-0-0,1|(579,514)|
+1,84,25,18,1,0,0,0,2,64,0,-1--1--1,|12||0-0-0,1|(724,656)|
+10,85,Evaporação Fase2,669,520,76,16,8,130,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128
+1,86,85,22,1,0,0,0,2,64,0,-1--1--1,|12||0-0-0,1|(588,528)|
+10,87,Evapotranspiração Bowen,1028,522,63,20,3,131,0,0,0,0,0,0
+1,88,1,22,1,0,0,0,0,64,0,-1--1--1,,1|(481,530)|
+1,89,14,46,0,0,0,0,0,64,0,-1--1--1,,1|(678,343)|
+1,90,2,46,0,0,0,0,0,64,0,-1--1--1,,1|(470,513)|
+1,91,2,19,1,0,0,0,0,64,0,-1--1--1,,1|(463,704)|
+1,92,65,18,1,0,0,0,0,64,0,-1--1--1,,1|(676,692)|
+///---\\\
+:L<%^E!@
+1:otimizacao.vdf
+9:teste
+22:$,Dollar,Dollars,$s
+22:Hour,Hours
+22:Month,Months
+22:Person,People,Persons
+22:Unit,Units
+22:Week,Weeks
+22:Year,Years
+22:Day,Days
+15:0,0,0,0,0,0
+19:110,0
+27:2,
+34:0,
+4:Time
+5:Evapotranspiração Ritchie
+24:26
+25:365
+26:365
