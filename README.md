@@ -21,3 +21,11 @@ PEREIRA, R. B. O. SIMULATION AND OPTIMIZATION OF EVAPOTRANSPIRATION RITCHIE'
 The completion of the analysis and computational modeling too accurately and consistently requires a detailed survey of requirements. Therefore, the objective of this study was the analysis, modeling and simulation of evapotranspiration and does a search of the parameters U and α. the model of Ritchie. Thus, measures were used micrometeorological held in a cambarazal of RPPN SESC - Pantanal. The reference values of evapotranspiration were estimated by the Bowen ratio. The documentation of the model developed in Vensim program, used a structured review and object oriented analysis. Data were standardized and implemented in a cluster of databases. The validation of the model was performed by non-parametric test U of Mann-Whitney and the sensitivity analysis by semivariogram and mapping by krigeagem. The result of the calibration values obtained for U 10.1952 and 4.93 for α. There was no significant difference between the simulated and evapotranspiration estimated by the method of Bowen ratio of the Man-Whitney test, giving a significance level of 0.673. The semivariogram of the isotropic model, with adjustment for the Gaussian function without landing, made a determination coefficient of 0.998.
 
 Keywords: database clusters, dynamic systems, Pantanal Matogrossense.
+
+## VENSIM
+
+O programa utilizado para a modelagem por sistemas dinâmicos foi o Vensim DSS for Windows version 5.9 (Double precission), produzido pela Ventana Simulation Enviroment. 
+
+Os recursos computacionais utilizado no Vensim foram a simulação (Simulation), análise de sensibilidade (Start Sensitivity Simulation) e a otimização (Begin Optimization).
+
+OBS: essa versão foi adaptada da dissertação para que seja possível acessar os dados diretamente dos arquivos .xls ao invés de obter isso diretamente do cluster de banco de dados
