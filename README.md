@@ -1,3 +1,11 @@
+![Simulação] (https://github.com/robertobopereira/Dissertacao/blob/master/simulacao.jpg)
+
+SIMULAÇÃO DA EVAPOTRANSPIRAÇÃO E OTIMIZAÇÃO COMPUTACIONAL DO MODELO DE RITCHIE COM CLUSTERS DE BANCOS DE DADOS
+
+## Dissertação
+
+- [Download] (https://github.com/robertobopereira/Dissertacao/Dissertacao.pdf)
+
 ## RESUMO
 
 PEREIRA, R. B. O. SIMULAÇÃO DA EVAPOTRANSPIRAÇÃO E OTIMIZAÇÃO COMPUTACIONAL DO MODELO DE RITCHIE COM CLUSTERS DE BANCOS DE DADOS. Cuiabá, 2009. 123F. Dissertação (Mestrado em Física Ambiental) - Instituto de Física, Universidade Federal de Mato Grosso.
