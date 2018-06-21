@@ -1,10 +1,10 @@
-![Simulação] (https://github.com/robertobopereira/Dissertacao/blob/master/simulacao.jpg)
+![Simulação](https://github.com/robertobopereira/Dissertacao/blob/master/simulacao.jpg)
 
 SIMULAÇÃO DA EVAPOTRANSPIRAÇÃO E OTIMIZAÇÃO COMPUTACIONAL DO MODELO DE RITCHIE COM CLUSTERS DE BANCOS DE DADOS
 
 ## Dissertação
 
-- [Download] (https://github.com/robertobopereira/Dissertacao/Dissertacao.pdf)
+- [Download](https://github.com/robertobopereira/Dissertacao/Dissertacao.pdf)
 
 ## RESUMO
 
