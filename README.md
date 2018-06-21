@@ -4,7 +4,7 @@ SIMULAÇÃO DA EVAPOTRANSPIRAÇÃO E OTIMIZAÇÃO COMPUTACIONAL DO MODELO DE RIT
 
 ## Dissertação
 
-- [Download](https://github.com/robertobopereira/Dissertacao/Dissertacao.pdf)
+- [Download](https://github.com/robertobopereira/Dissertacao/blob/master/Dissertacao.pdf)
 
 ## RESUMO
 
