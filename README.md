@@ -2,7 +2,7 @@
 
 SIMULAÇÃO DA EVAPOTRANSPIRAÇÃO E OTIMIZAÇÃO COMPUTACIONAL DO MODELO DE RITCHIE COM CLUSTERS DE BANCOS DE DADOS
 
-## Dissertação
+## DISSERTAÇÃO
 
 - [Download](https://github.com/robertobopereira/Dissertacao/blob/master/Dissertacao.pdf)
 
@@ -28,4 +28,4 @@ O programa utilizado para a modelagem por sistemas dinâmicos foi o Vensim DSS f
 
 Os recursos computacionais utilizado no Vensim foram a simulação (Simulation), análise de sensibilidade (Start Sensitivity Simulation) e a otimização (Begin Optimization).
 
-OBS: essa versão foi adaptada da dissertação para que seja possível acessar os dados diretamente dos arquivos .xls ao invés de obter isso diretamente do cluster de banco de dados
+OBS: essa versão foi adaptada da dissertação para que seja possível acessar os dados diretamente dos arquivos .xls ao invés de acessá-lo diretamente do cluster de banco de dados
